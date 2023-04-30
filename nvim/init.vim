@@ -1,0 +1,3 @@
+" ----- visual/ -----
+set number
+" ----- /visual -----
