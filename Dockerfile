@@ -45,10 +45,7 @@ RUN pip3 install --upgrade pip pynvim
 COPY nvim /root/.config/nvim
 RUN chmod 777 /root/.config
 RUN chmod -R 777 /root/.config/nvim
-# --overwrite-config -> init.vimの上書きを許可
-# echo "1" -> インストーラーのselect入力に対して1を選択。（dein.vimの向き先の選択。/root/.cacheを指定）
-RUN echo -e "1\n2" | sh -c "$(curl -fsSL https://raw.githubusercontent.com/Shougo/dein-installer.vim/master/installer.sh) --overwrite-config"
-RUN cat /root/.config/nvim/init.vim.pre-dein-vim >> /root/.config/nvim/init.vim
+
 RUN nvim +:UpdateRemotePlugins +qa
 
 # Linuxでのroot:root問題対策
