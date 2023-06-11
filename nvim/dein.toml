@@ -1,2 +1,6 @@
 [[plugins]]
-repo = 'lambdalisue/fern.vim' 
+repo = 'lambdalisue/fern.vim'
+hook_add = '''
+	" Ctrl+nでファイルツリーを表示/非表示する
+	nnoremap <C-n> :Fern . -reveal=% -drawer -toggle -width=40<CR>
+'''
