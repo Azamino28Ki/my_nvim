@@ -1,5 +1,5 @@
 
-FROM alpine:latest
+FROM debian:stable-slim
 
 
 
@@ -31,6 +31,7 @@ RUN apk update && \
     rm -rf /var/cache/apk/*
 
 RUN pip3 install --upgrade pip pynvim
+
 # RUN gem install -N \
 #     etc \
 #     json \
@@ -59,5 +60,10 @@ RUN chmod 777 /root/.local/share
 RUN chmod -R 777 /root/.local/share/nvim
 RUN chmod 777 /root/.local/state
 RUN chmod -R 777 /root/.local/state/nvim
+
+# deno_install
+RUN curl -fsSL https://deno.land/x/install/install.sh | sh
+ENV DENO_INSTALL /root/.deno
+ENV PATH $DENO_INSTALL/bin:$PATH
 
 ENTRYPOINT ["nvim"]

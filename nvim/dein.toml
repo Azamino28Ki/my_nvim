@@ -4,3 +4,11 @@ hook_add = '''
 	" Ctrl+nでファイルツリーを表示/非表示する
 	nnoremap <C-n> :Fern . -reveal=% -drawer -toggle -width=40<CR>
 '''
+
+# /----- ddc.vim ------
+[[plugins]]
+repo = 'Shougo/ddc.vim'
+
+[[plugins]]
+repo = 'vim-denops/denops.vim'
+# ------ ddc.vim -----/
