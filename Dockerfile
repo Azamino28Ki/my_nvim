@@ -1,10 +1,4 @@
-
 FROM debian:stable-slim
-
-
-
-# マルチバイト文字をまともに扱うための設定
-ENV LANG="en_US.UTF-8" LANGUAGE="en_US:ja" LC_ALL="en_US.UTF-8"
 
 # 最低限必要なパッケージ
 RUN apt update && \
@@ -15,8 +9,13 @@ RUN apt update && \
     git \
     musl-dev \
     nodejs \
-    python3; exit 0
+    locales \
+    python3
 
+# マルチバイト文字をまともに扱うための設定
+RUN sed -i -E 's/# (en_US.UTF-8)/\1/' /etc/locale.gen && \
+    locale-gen
+ENV LANG="en_US.UTF-8" LANGUAGE="en_US:ja" LC_ALL="en_US.UTF-8"
 # RUN dpkg --audit
 
 # install dein.vim
