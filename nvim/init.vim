@@ -66,3 +66,66 @@ if dein#check_install()
   call dein#install()
 endif
 " ----- /config dein.vim -----
+
+" ----- nvim-lspconfig+mason.nvim+mason-lspconfig/ -----
+lua << EOF
+ local on_attach = function(client, bufnr)
+  client.server_capabilities.documentFormattingProvider = false
+  local set = vim.keymap.set
+   set('n', 'gd', '<cmd>lua vim.lsp.buf.definition()<CR>')
+   set('n', 'K', '<cmd>lua vim.lsp.buf.hover()<CR>')
+   set('n', 'gi', '<cmd>lua vim.lsp.buf.implementation()<CR>')
+   set('n', 'gs', '<cmd>lua vim.lsp.buf.signature_help()<CR>')
+   set('n', 'gn', '<cmd>lua vim.lsp.buf.rename()<CR>')
+   set('n', 'ga', '<cmd>lua vim.lsp.buf.code_action()<CR>')
+   set('n', 'gr', '<cmd>lua vim.lsp.buf.references()<CR>')
+   set('n', 'gx', '<cmd>lua vim.lsp.diagnostic.show_line_diagnostics()<CR>')
+   set('n', 'g[', '<cmd>lua vim.lsp.diagnostic.goto_prev()<CR>')
+   set('n', 'g]', '<cmd>lua vim.lsp.diagnostic.goto_next()<CR>')
+   set('n', 'gf', '<cmd>lua vim.lsp.buf.formatting()<CR>')
+ end
+ vim.lsp.handlers["textDocument/publishDiagnostics"] = vim.lsp.with(
+ vim.lsp.diagnostic.on_publish_diagnostics, { virtual_text = false })
+
+ require("mason").setup()
+ 
+ local mason_lspconfig = require('mason-lspconfig')
+ local nvim_lsp = require('lspconfig')
+ mason_lspconfig.setup_handlers({ function(server_name)
+     	local opts = {}
+	opts.on_attach = on_attach
+	nvim_lsp[server_name].setup(opts)
+ end })
+ mason_lspconfig.setup {
+ 	ensure_installed = {'clangd'}
+ }
+EOF
+
+" ----- /nvim-lspconfig+mason.nvim+mason-lspconfig -----
+
+" /----- nvim-cmp -----
+lua << EOF
+ local cmp = require("cmp")
+ cmp.setup({
+ 	snippet = {
+		expand = function(args)
+		    vim.fn["vsnip#anonymous"](args.body)
+		end,
+  	},
+	sources = {
+		{ name = "nvim_lsp" },
+	},
+	mapping = cmp.mapping.preset.insert({
+		["<C-p>"] = cmp.mapping.select_prev_item(),
+		["<C-n>"] = cmp.mapping.select_next_item(),
+		['<C-l>'] = cmp.mapping.complete(),
+		['<C-e>'] = cmp.mapping.abort(),
+		["<CR>"] = cmp.mapping.confirm { select = true },
+	}),
+	experimental = {
+		ghost_text = true,
+	},
+ })
+EOF
+" ----- nvim-cmp -----/
+

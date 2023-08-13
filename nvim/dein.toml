@@ -2,39 +2,68 @@
 repo = 'lambdalisue/fern.vim'
 hook_add = '''
 	" Ctrl+nでファイルツリーを表示/非表示する
-	nnoremap <C-n> :Fern . -reveal=% -drawer -toggle -width=40<CR>
+	nnoremap <C-n> :Fern . -reveal=% -drawer -toggle -width=35<CR>
 '''
 
 # /----- ddc.vim ------
 [[plugins]]
+repo = 'vim-denops/denops.vim'
+
+[[plugins]]
 repo = 'Shougo/ddc.vim'
-hook = '''
-	" Set a single option
-	call ddc#custom#patch_global('ui', 'native')
-
-	" Pass a dictionary to set multiple options
-	call ddc#custom#patch_global(#{
-	\   sourceOptions: #{
-	\     _: #{
-	\       keywordPattern: '[a-zA-Z_]\w*',
-	\     },
-	\   },
-	\   smartCase: v:true,
-	\ })
-
-	call ddc#custom#patch_filetype(['c', 'cpp'], 'sources', ['around'])
-	" <TAB>: completion.
-	inoremap <silent><expr> <TAB>
-	\ pumvisible() ? '<C-n>' :
-	\ (col('.') <= 1 <Bar><Bar> getline('.')[col('.') - 2] =~# '\s') ?
-	\ '<TAB>' : ddc#map#manual_complete()
-
-	" <S-TAB>: completion back.
-	inoremap <expr><S-TAB>  pumvisible() ? '<C-p>' : '<C-h>'
-
+depends = ['denops.vim']
+hook_source = '''
+	call ddc#custom#patch_global('sources', ['around'])
+	call ddc#custom#patch_global('sourceOptions', {
+		\ '_': {
+		\   'matchers': ['matcher_head'],
+		\   'sorters': ['sorter_rank']
+		\ },
+		\ 'around': {
+		\   'mark': 'around'
+		\ },
+		\ 'nvim-lsp': {
+		\   'mark': 'lsp',
+		\   'forceCompletionPattern': '\.\w*|:\w*|->\w*'},
+		\ })
 	call ddc#enable()
 '''
 
 [[plugins]]
-repo = 'vim-denops/denops.vim'
+repo = 'Shougo/ddc-around'
+on_source = 'ddc.vim'
+
+[[plugins]]
+repo = 'Shougo/ddc-matcher_head'
+on_source = 'ddc.vim'
+
+[[plugins]]
+repo = 'Shougo/ddc-sorter_rank'
+on_source = 'ddc.vim'
+
+[[plugins]]
+repo = 'Shougo/ddc-nvim-lsp'
+on_source = 'ddc.vim'
+
 # ------ ddc.vim -----/
+
+# / --------- dein/lazy.toml ---------
+[[plugins]]
+ repo = 'neovim/nvim-lspconfig'
+
+[[plugins]]
+ repo = 'williamboman/mason.nvim'
+
+[[plugins]]
+ repo = 'williamboman/mason-lspconfig.nvim'
+
+[[plugins]]
+ repo = 'hrsh7th/nvim-cmp'
+ 
+[[plugins]]
+ repo = 'hrsh7th/cmp-nvim-lsp'
+
+[[plugins]]
+ repo = 'hrsh7th/vim-vsnip'
+
+# --------- dein/lazy.toml --------- /

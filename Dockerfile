@@ -3,6 +3,8 @@ FROM debian:stable-slim
 # 最低限必要なパッケージ
 RUN apt update && \
     apt install -y  \
+    wget \
+    gnupg \
     curl \
     unzip \
     gcc \
@@ -10,7 +12,16 @@ RUN apt update && \
     musl-dev \
     nodejs \
     locales \
-    python3
+    python3 \
+    clang-tools
+
+# Clangインストール
+# RUN echo 'deb http://apt.llvm.org/bookworm/ llvm-toolchain-bookworm main' >> /etc/apt/sources.list
+# RUN echo 'deb-src http://apt.llvm.org/bookworm/ llvm-toolchain-bookworm main' >> /etc/apt/sources.list
+# RUN wget -O - https://apt.llvm.org/llvm-snapshot.gpg.key | apt-key add -
+
+# RUN apt update && \
+#     apt install -y clang 
 
 # マルチバイト文字をまともに扱うための設定
 RUN sed -i -E 's/# (en_US.UTF-8)/\1/' /etc/locale.gen && \
